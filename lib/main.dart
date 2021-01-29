@@ -121,33 +121,40 @@ class _DrenchState extends State<Drench> {
         }
         return cont == ( widget.size * widget.size );
       }
-    }
-    return false;
-  }
-
   void updateCanvas( int value ) {
-    if ( over != true ) {
-      bool result = verificaGameOver();
-      if ( result == false ) {
-        _counter++;
-        updateWidgetMatrix(value, _matrix[0][0]);
-        setState(() {});
-      } else {
-        over = true;
-      }
+    if ( over == true ) {
+      return;
     }
+
+    if(value == _matrix[0][0]) {
+      return;
+    }
+
+    _counter++;
+    updateWidgetMatrix(value, _matrix[0][0]);
+    setState(() {});
+
+    if(verificaGameOver()) {
+      over = true;
+      return;
+    }
+
   }
 
   void updateWidgetMatrix ( int value, int oldValue, [ x = 0, y = 0 ]) {
-    if ( x < widget.size && y < widget.size && x >= 0 && y >= 0 ) {
-      if ( _matrix[x][y] == oldValue || ( x == 0 && y == 0 )) {
-        _matrix[x][y] = value;
-        updateWidgetMatrix ( value, oldValue, x, y + 1 );
-        updateWidgetMatrix ( value, oldValue, x, y - 1 );
-        updateWidgetMatrix ( value, oldValue, x + 1, y );
-        updateWidgetMatrix ( value, oldValue, x - 1, y );
-      }
-    } 
+    if ( x >= widget.size || y >= widget.size || x < 0 || y < 0 ) {
+      return;
+    }
+
+    if(_matrix[x][y] != oldValue && (x != 0 || y != 0)) {
+      return;
+    }
+ 
+    _matrix[x][y] = value;
+    updateWidgetMatrix ( value, oldValue, x, y + 1 );
+    updateWidgetMatrix ( value, oldValue, x, y - 1 );
+    updateWidgetMatrix ( value, oldValue, x + 1, y );
+    updateWidgetMatrix ( value, oldValue, x - 1, y );
   }
 
   @override

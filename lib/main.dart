@@ -111,16 +111,24 @@ class _DrenchState extends State<Drench> {
   bool verificaGameOver() {
     if ( _counter == widget.maxClicks ) {
       return true;
-    } else {
-      int val = _matrix[0][0];
-      int cont = 0;
-      for ( int i = 0; i < widget.size; i ++ ) {
-        for ( int j = 0; j < widget.size; j ++ ) {
-          if ( _matrix[i][j] == val ) cont ++;
-          else break;
+    }
+
+    int val = _matrix[0][0];
+    int cont = 0;
+
+    for ( int i = 0; i < widget.size; i ++ ) {
+      for ( int j = 0; j < widget.size; j ++ ) {
+        if ( _matrix[i][j] != val ) {
+          return false;
         }
-        return cont == ( widget.size * widget.size );
+        
+        cont ++;
       }
+    }
+
+    return cont == ( widget.size * widget.size );
+  }
+
   void updateCanvas( int value ) {
     if ( over == true ) {
       return;
@@ -192,7 +200,7 @@ class _DrenchState extends State<Drench> {
   }
 
   Container buildBottomOption() {
-    if ( _counter >= widget.maxClicks ) {
+    if ( over == true ) {
       return Container (
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         width: getWidgetSize(),

@@ -68,22 +68,36 @@ class _DrenchState extends State<Drench> {
   Widget buildWidgetMatrix () {
     List<Widget> result = [];
     _matrix = widget._matrix;
+
     for ( int i = 0; i < widget.size; i++ ) {
       List<Widget> auxRow = [];
+      
       for ( int j = 0; j < widget.size; j++ ) {
         auxRow.add(
           Container(
-            height: MediaQuery.of(context).size.width / widget.size,
-            width: MediaQuery.of(context).size.width / widget.size,
+            height: getWidgetSize() / widget.size,
+            width: getWidgetSize() / widget.size,
             color: getColor(_matrix[i][j]),
           )
         );
       }
+
       result.add(
-        Row( children: auxRow )
+        Row( 
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: auxRow
+        )
       );
     }
-    return Column( children: result );
+    return Column(children: result);
+  }
+
+  double getWidgetSize() {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return min(screenWidth, screenHeight - 270);
   }
 
   void newGame () {
@@ -156,6 +170,8 @@ class _DrenchState extends State<Drench> {
       body: SingleChildScrollView(
         child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               buildWidgetMatrix(),
               buildBottomMenu(),
@@ -172,7 +188,7 @@ class _DrenchState extends State<Drench> {
     if ( _counter >= widget.maxClicks ) {
       return Container (
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        width: MediaQuery.of(context).size.width,
+        width: getWidgetSize(),
         child: FlatButton(
           color: Colors.green,
           onPressed: () {
@@ -252,8 +268,8 @@ class _DrenchState extends State<Drench> {
     for ( int i = 0 ; i < 6; i++ ) {
       buttons.add(
         Container(
-          height: MediaQuery.of(context).size.width / 8,
-          width: MediaQuery.of(context).size.width / 8,
+          height: getWidgetSize() / 8,
+          width: getWidgetSize() / 8,
           color: getColor(i),
           child: FlatButton(
             color: getColor(i),
@@ -267,7 +283,7 @@ class _DrenchState extends State<Drench> {
     }
 
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: getWidgetSize(),
       padding: const EdgeInsets.only(top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

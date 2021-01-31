@@ -1,6 +1,6 @@
-import 'package:drench/features/socket/connection_params.model.dart';
-import 'package:drench/features/socket/socket_connection_service.dart';
-import 'package:drench/pages/home_page/components/connection_dialog/connection_dialog_service.dart';
+import 'package:drench/features/multiplayer/components/connection_dialog/connection_dialog_service.dart';
+import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
 import 'package:drench/pages/home_page/components/drench/drench.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
 import 'package:flutter/material.dart';

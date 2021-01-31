@@ -1,4 +1,4 @@
-import 'package:drench/features/socket/connection_params_model.dart';
+import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 
 class SocketConnectionService {
   void connect(ConnectionParams connectionParams) {

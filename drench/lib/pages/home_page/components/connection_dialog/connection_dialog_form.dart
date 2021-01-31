@@ -1,15 +1,12 @@
-import 'package:drench/pages/home_page/components/connection_dialog/connection_dialog_form_controller.dart';
+import 'package:drench/features/socket/connection_params_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ConnectionDialogForm extends StatefulWidget {
-  final ConnectionDialogFormController controller;
-
-  ConnectionDialogForm({this.controller}) {}
+  ConnectionDialogForm() {}
 
   @override
-  _ConnectionDialogFormState createState() =>
-      _ConnectionDialogFormState(controller);
+  _ConnectionDialogFormState createState() => _ConnectionDialogFormState();
 }
 
 class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
@@ -18,25 +15,9 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   TextEditingController _ipAddressFieldController;
   TextEditingController _portFieldController;
 
-  _ConnectionDialogFormState(ConnectionDialogFormController controller) {
+  _ConnectionDialogFormState() {
     this._ipAddressFieldController = TextEditingController(text: '127.0.0.1');
     this._portFieldController = TextEditingController();
-
-    controller.getValues = this.getValues;
-  }
-
-  getValues() {
-    var values = {'isTcp': _isTcp, 'port': this._portFieldController.text};
-
-    if (hasIsServerField()) {
-      values['isServer'] = _isServer;
-    }
-
-    if (hasIpAddressField()) {
-      values['ipAddress'] = this._ipAddressFieldController.text;
-    }
-
-    return values;
   }
 
   @override
@@ -49,42 +30,17 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   }
 
   List<Widget> _getFields() {
-    List<Widget> fields = [
+    List<Widget> list = [
       _isTcpField(),
+      hasIsServerField() ? _isServerField() : null,
+      SizedBox(height: 20),
+      hasIpAddressField() ? _ipAddressField() : null,
+      _portField(),
+      SizedBox(height: 40),
+      _submitButton()
     ];
 
-    if (hasIsServerField()) {
-      fields.add(_isServerField());
-    }
-
-    fields.add(SizedBox(height: 40));
-
-    if (hasIpAddressField()) {
-      fields.add(_ipAddressField());
-    }
-
-    fields.add(_portField());
-
-    return fields;
-  }
-
-  Widget _ipAddressField() {
-    return TextField(
-      controller: _ipAddressFieldController,
-      autofocus: true,
-      decoration: InputDecoration(
-        labelText: 'Endereço Ip',
-      ),
-    );
-  }
-
-  Widget _portField() {
-    return TextField(
-      controller: _portFieldController,
-      decoration: InputDecoration(
-        labelText: 'Porta',
-      ),
-    );
+    return list.where((field) => field != null).toList();
   }
 
   Widget _isServerField() {
@@ -108,6 +64,74 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
           _isTcp = value;
         });
       },
+    );
+  }
+
+  Widget _ipAddressField() {
+    return TextField(
+      controller: _ipAddressFieldController,
+      autofocus: true,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: 'Endereço Ip',
+      ),
+    );
+  }
+
+  Widget _portField() {
+    return TextField(
+      controller: _portFieldController,
+      textInputAction: TextInputAction.go,
+      onSubmitted: (_) => _initConnection(),
+      decoration: InputDecoration(
+        labelText: 'Porta',
+      ),
+    );
+  }
+
+  Widget _submitButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: RaisedButton(
+        color: Theme.of(context).primaryColor,
+        textColor: Colors.white,
+        child: Text(
+          _submitButtonText(),
+          style: TextStyle(
+            fontSize: 19,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        onPressed: _initConnection,
+      ),
+    );
+  }
+
+  String _submitButtonText() {
+    if (!this._isTcp) {
+      return 'Abrir porta UDP';
+    }
+
+    if (this._isServer) {
+      return 'Iniciar servidor TCP';
+    }
+
+    return 'Estabelecer conexão TCP';
+  }
+
+  _initConnection() {
+    ConnectionParams params = this.getValues();
+    Navigator.of(this.context).pop(params);
+  }
+
+  ConnectionParams getValues() {
+    return ConnectionParams(
+      isTcp: _isTcp,
+      isServer: hasIsServerField() ? _isServer : null,
+      ipAddress:
+          hasIpAddressField() ? this._ipAddressFieldController.text : null,
+      port: this._portFieldController.text,
     );
   }
 

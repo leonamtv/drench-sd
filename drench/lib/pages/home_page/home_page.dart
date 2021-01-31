@@ -1,4 +1,6 @@
-import 'package:drench/pages/home_page/components/connection_dialog/connection_dialog.dart';
+import 'package:drench/features/socket/connection_params_model.dart';
+import 'package:drench/features/socket/socket_connection_service.dart';
+import 'package:drench/pages/home_page/components/connection_dialog/connection_dialog_service.dart';
 import 'package:drench/pages/home_page/components/drench/drench.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final DrenchController drenchController = DrenchController();
+
+  final ConnectionDialogService _connectionDialogService =
+      ConnectionDialogService();
+
+  final SocketConnectionService _socketConnectionService =
+      SocketConnectionService();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +50,7 @@ class _HomePageState extends State<HomePage> {
         Icons.offline_share,
         color: Colors.white,
       ),
-      onPressed: () async {
-        var a = await ConnectionDialog().show(this.context);
-
-        print(a);
-      },
+      onPressed: this.showConnectionDialog,
     );
   }
 
@@ -56,13 +60,22 @@ class _HomePageState extends State<HomePage> {
         Icons.refresh,
         color: Colors.white,
       ),
-      onPressed: () {
-        this.drenchController.newGame();
-      },
+      onPressed: this.drenchController.newGame,
     );
   }
 
   Widget _body() {
     return Drench(controller: drenchController);
+  }
+
+  void showConnectionDialog() async {
+    ConnectionParams connectionParams =
+        await _connectionDialogService.show(this.context);
+
+    if (connectionParams == null) {
+      return;
+    }
+
+    this._socketConnectionService.connect(connectionParams);
   }
 }

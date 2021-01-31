@@ -13,10 +13,10 @@ class ConnectionDialogForm extends StatefulWidget {
 }
 
 class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
+  bool _isTcp = true;
+  bool _isServer = false;
   TextEditingController _ipAddressFieldController;
   TextEditingController _portFieldController;
-  bool _isServer = true;
-  bool _isTcp = true;
 
   _ConnectionDialogFormState(ConnectionDialogFormController controller) {
     this._ipAddressFieldController = TextEditingController(text: '127.0.0.1');
@@ -26,12 +26,17 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   }
 
   getValues() {
-    return {
-      'idAddress': this._ipAddressFieldController.text,
-      'port': this._portFieldController.text,
-      'isServer': this._isServer,
-      'isTcp': this._isTcp
-    };
+    var values = {'isTcp': _isTcp, 'port': this._portFieldController.text};
+
+    if (hasIsServerField()) {
+      values['isServer'] = _isServer;
+    }
+
+    if (hasIpAddressField()) {
+      values['ipAddress'] = this._ipAddressFieldController.text;
+    }
+
+    return values;
   }
 
   @override
@@ -39,16 +44,28 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _ipAddressField(),
-        _portField(),
-        SizedBox(
-          height: 40,
-        ),
-        _isServerField(),
-        _isTcpField(),
-      ],
+      children: _getFields(),
     );
+  }
+
+  List<Widget> _getFields() {
+    List<Widget> fields = [
+      _isTcpField(),
+    ];
+
+    if (hasIsServerField()) {
+      fields.add(_isServerField());
+    }
+
+    fields.add(SizedBox(height: 40));
+
+    if (hasIpAddressField()) {
+      fields.add(_ipAddressField());
+    }
+
+    fields.add(_portField());
+
+    return fields;
   }
 
   Widget _ipAddressField() {
@@ -92,5 +109,13 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
         });
       },
     );
+  }
+
+  bool hasIsServerField() {
+    return _isTcp;
+  }
+
+  bool hasIpAddressField() {
+    return !_isTcp || _isTcp && !_isServer;
   }
 }

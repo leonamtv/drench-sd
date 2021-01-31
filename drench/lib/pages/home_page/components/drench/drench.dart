@@ -1,18 +1,45 @@
 import 'dart:math';
+import 'package:drench/features/drench_game/drench_game_utils.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
+import 'package:drench/pages/home_page/components/drench/widgets/drench_matrix.dart';
 import 'package:flutter/material.dart';
 
 class Drench extends StatefulWidget {
-  final int maxClicks = 30;
-  final int size = 14;
-
-  List<List<int>> _matrix;
-
   final DrenchController controller;
 
-  Drench({Key key, this.controller}) {
+  Drench({Key key, this.controller});
+
+  @override
+  _DrenchState createState() => _DrenchState(controller);
+}
+
+class _DrenchState extends State<Drench> {
+  final int maxClicks = DrenchGameUtils.maxClicks;
+  final int size = DrenchGameUtils.size;
+
+  List<List<int>> _matrix;
+  List<Color> colors = DrenchGameUtils.colors;
+
+  int _counter = 0;
+
+  bool over = false;
+
+  _DrenchState(DrenchController _controller) {
+    _controller.newGame = newGame;
+
     _matrix = List.generate(size, (i) => List(size), growable: false);
     this.redo();
+  }
+
+  Color getColor(int i) {
+    return colors[i];
+  }
+
+  double getWidgetSize() {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return min(screenWidth, screenHeight - 270);
   }
 
   void redo() {
@@ -24,86 +51,12 @@ class Drench extends StatefulWidget {
     }
   }
 
-  @override
-  _DrenchState createState() => _DrenchState(controller);
-}
-
-class _DrenchState extends State<Drench> {
-  List<List<int>> _matrix;
-  List<Color> colors = [
-    Colors.green,
-    Colors.pink[300],
-    Colors.purple,
-    Colors.blue,
-    Colors.red,
-    Colors.yellow,
-  ];
-
-  int _counter = 0;
-
-  bool over = false;
-
-  Color getColor(int i) {
-    return colors[i];
-  }
-
-  Widget buildWidgetMatrix() {
-    List<Widget> result = [];
-    _matrix = widget._matrix;
-
-    for (int i = 0; i < widget.size; i++) {
-      List<Widget> auxRow = [];
-
-      for (int j = 0; j < widget.size; j++) {
-        auxRow.add(Container(
-          height: getWidgetSize() / widget.size,
-          width: getWidgetSize() / widget.size,
-          color: getColor(_matrix[i][j]),
-        ));
-      }
-
-      result.add(Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: auxRow));
-    }
-    return Column(children: result);
-  }
-
-  double getWidgetSize() {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return min(screenWidth, screenHeight - 270);
-  }
-
   void newGame() {
     setState(() {
-      widget.redo();
+      this.redo();
       _counter = 0;
       over = false;
     });
-  }
-
-  bool verificaGameOver() {
-    if (_counter == widget.maxClicks) {
-      return true;
-    }
-
-    int val = _matrix[0][0];
-    int cont = 0;
-
-    for (int i = 0; i < widget.size; i++) {
-      for (int j = 0; j < widget.size; j++) {
-        if (_matrix[i][j] != val) {
-          return false;
-        }
-
-        cont++;
-      }
-    }
-
-    return cont == (widget.size * widget.size);
   }
 
   void updateCanvas(int value) {
@@ -116,33 +69,14 @@ class _DrenchState extends State<Drench> {
     }
 
     _counter++;
-    updateWidgetMatrix(value, _matrix[0][0]);
+    DrenchGameUtils.propagateColorInMatrix(_matrix, value, _matrix[0][0]);
+
     setState(() {});
 
-    if (verificaGameOver()) {
+    if (DrenchGameUtils.isGameOver(_counter, _matrix)) {
       over = true;
       return;
     }
-  }
-
-  void updateWidgetMatrix(int value, int oldValue, [x = 0, y = 0]) {
-    if (x >= widget.size || y >= widget.size || x < 0 || y < 0) {
-      return;
-    }
-
-    if (_matrix[x][y] != oldValue && (x != 0 || y != 0)) {
-      return;
-    }
-
-    _matrix[x][y] = value;
-    updateWidgetMatrix(value, oldValue, x, y + 1);
-    updateWidgetMatrix(value, oldValue, x, y - 1);
-    updateWidgetMatrix(value, oldValue, x + 1, y);
-    updateWidgetMatrix(value, oldValue, x - 1, y);
-  }
-
-  _DrenchState(DrenchController _controller) {
-    _controller.newGame = newGame;
   }
 
   @override
@@ -153,7 +87,10 @@ class _DrenchState extends State<Drench> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            buildWidgetMatrix(),
+            DrenchMatrix(
+              matrix: _matrix,
+              widgetSize: getWidgetSize(),
+            ),
             buildBottomMenu(),
             buildBottomStatus(),
             buildBottomOption()
@@ -203,16 +140,15 @@ class _DrenchState extends State<Drench> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
             Text(
-              (widget.maxClicks - _counter).toString(),
+              (maxClicks - _counter).toString(),
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w500,
-                  color: ((widget.maxClicks - _counter) > 5)
-                      ? Colors.black
-                      : Colors.red),
+                  color:
+                      ((maxClicks - _counter) > 5) ? Colors.black : Colors.red),
             ),
             Text(
-              (widget.maxClicks - _counter) > 1 ? ' tentativas' : ' tentativa',
+              (maxClicks - _counter) > 1 ? ' tentativas' : ' tentativa',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             )
           ],

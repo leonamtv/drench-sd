@@ -22,6 +22,7 @@ class DrenchControlMenu extends StatelessWidget {
       child: Column(
         children: [
           buildBottomMenu(),
+          buildBottomConnectionStatus(),
           buildBottomStatus(),
           buildBottomOption(),
         ],
@@ -31,9 +32,6 @@ class DrenchControlMenu extends StatelessWidget {
 
   Container buildBottomMenu() {
     List<Container> buttons = [];
-
-    print('------');
-    print(controlMenuSize);
 
     for (int i = 0; i < 6; i++) {
       buttons.add(Container(
@@ -52,7 +50,7 @@ class DrenchControlMenu extends StatelessWidget {
 
     return Container(
       width: controlMenuSize,
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[...buttons],
@@ -60,48 +58,75 @@ class DrenchControlMenu extends StatelessWidget {
     );
   }
 
-  Container buildBottomStatus() {
-    print(controlMenuSize);
+  buildBottomConnectionStatus() {
+    TextStyle textStyle = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    );
 
-    if (gameOver != true) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: Wrap(
-          children: <Widget>[
-            Text(
-              'Restando ',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-            ),
-            Text(
-              this.drenchGame.remainingPaints.toString(),
-              style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                  color: (this.drenchGame.remainingPaints > 5)
-                      ? Colors.black
-                      : Colors.red),
-            ),
-            Text(
-              this.drenchGame.remainingPaints > 1
-                  ? ' tentativas'
-                  : ' tentativa',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-            )
-          ],
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Center(
+        child: Text(
+          'Sem conexão',
+          style: textStyle,
         ),
-      );
-    } else {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Text(
-            'O jogo acabou ',
-            style: TextStyle(
-                fontSize: 30, fontWeight: FontWeight.w500, color: Colors.red),
-          ),
-        ),
-      );
+      ),
+    );
+  }
+
+  Container buildBottomStatus() {
+    if (gameOver) {
+      return _gameFinished();
     }
+
+    return _remaingingPaints();
+  }
+
+  Widget _remaingingPaints() {
+    var remainingPaints = this.drenchGame.remainingPaints;
+
+    TextStyle textStyle = TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w500,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Wrap(
+        children: <Widget>[
+          Text('Restando ', style: textStyle),
+          Text(
+            remainingPaints.toString(),
+            style: textStyle.copyWith(
+              color: (remainingPaints > 5) ? Colors.black : Colors.red,
+            ),
+          ),
+          Text(
+            remainingPaints > 1 ? ' tentativas' : ' tentativa',
+            style: textStyle,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _gameFinished() {
+    TextStyle textStyle = TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.w500,
+      color: Colors.red,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Center(
+        child: Text(
+          'O jogo acabou ',
+          style: textStyle,
+        ),
+      ),
+    );
   }
 
   Container buildBottomOption() {
@@ -112,7 +137,7 @@ class DrenchControlMenu extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
       width: controlMenuSize,
       child: FlatButton(
         color: Colors.green,
@@ -124,7 +149,10 @@ class DrenchControlMenu extends StatelessWidget {
           child: Text(
             'Novo Jogo',
             style: TextStyle(
-                fontSize: 25, fontWeight: FontWeight.w500, color: Colors.white),
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

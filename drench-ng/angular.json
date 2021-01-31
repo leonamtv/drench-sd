@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "drench-ng"
+    }
+  },
+  "defaultProject": "drench-ng",
+  "cli": {
+    "analytics": false
+  }
 }

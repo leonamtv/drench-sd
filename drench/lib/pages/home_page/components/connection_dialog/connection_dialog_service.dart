@@ -12,6 +12,7 @@ class ConnectionDialogService {
   AlertDialog _alertDialog(BuildContext context) {
     return new AlertDialog(
       title: Text('Conectar-se a outro dispositivo'),
+      contentPadding: EdgeInsets.fromLTRB(16, 20, 16, 16),
       content: _content(),
     );
   }

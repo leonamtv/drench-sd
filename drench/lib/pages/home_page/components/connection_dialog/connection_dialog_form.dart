@@ -1,4 +1,4 @@
-import 'package:drench/features/socket/connection_params_model.dart';
+import 'package:drench/features/socket/connection_params.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,10 +22,12 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _getFields(),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _getFields(),
+      ),
     );
   }
 
@@ -92,15 +94,18 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   Widget _submitButton() {
     return SizedBox(
       width: double.infinity,
-      height: 50,
       child: RaisedButton(
         color: Theme.of(context).primaryColor,
         textColor: Colors.white,
-        child: Text(
-          _submitButtonText(),
-          style: TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.w400,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            _submitButtonText(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         onPressed: _initConnection,

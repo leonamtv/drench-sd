@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:drench/features/drench_game/drench_game.model.dart';
+import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
 import 'package:drench/pages/home_page/components/drench/widgets/drench_control_menu.dart';
 import 'package:drench/pages/home_page/components/drench/widgets/drench_matrix.dart';
@@ -20,14 +21,16 @@ class _DrenchState extends State<Drench> {
   final double topWidgetHeight = 10;
   double get bottomWidgetHeight => min(
         0.5 * MediaQuery.of(context).size.height,
-        230,
+        275,
       );
 
-  double get maxDrenchBoardHeight =>
-      MediaQuery.of(context).size.height -
-      topWidgetHeight -
-      bottomWidgetHeight -
-      56;
+  double get maxDrenchBoardHeight => max(
+        MediaQuery.of(context).size.height -
+            topWidgetHeight -
+            bottomWidgetHeight -
+            56,
+        0,
+      );
 
   double get drenchBoardSize => min(
         MediaQuery.of(context).size.width - 10,
@@ -45,11 +48,14 @@ class _DrenchState extends State<Drench> {
   DrenchGame drenchGame;
   List<Color> colors = DrenchGame.colors;
 
+  ConnectionParams connectionParams;
+
   bool gameOver = false;
 
   _DrenchState({this.controller}) {
     controller.newGame = newGame;
     controller.updateBoard = updateBoard;
+    controller.setConnectionParams = setConnectionParams;
 
     this.setDrenchGame();
   }
@@ -77,6 +83,12 @@ class _DrenchState extends State<Drench> {
     }
 
     setState(() {});
+  }
+
+  void setConnectionParams(ConnectionParams connectionParams) {
+    setState(() {
+      this.connectionParams = connectionParams;
+    });
   }
 
   @override
@@ -116,6 +128,7 @@ class _DrenchState extends State<Drench> {
         controller: this.controller,
         controlMenuSize: this.controlMenuSize,
         drenchGame: this.drenchGame,
+        connectionParams: this.connectionParams,
       ),
     );
   }

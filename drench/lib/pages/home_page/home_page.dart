@@ -12,13 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final DrenchController drenchController = DrenchController();
-
   final ConnectionDialogService _connectionDialogService =
       ConnectionDialogService();
 
   final SocketConnectionService _socketConnectionService =
       SocketConnectionService();
+
+  final DrenchController drenchController = DrenchController();
+
+  _HomePageState() {
+    this.drenchController.setSocketConnectionService(_socketConnectionService);
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,7 @@
 import 'package:drench/features/drench_game/drench_game.model.dart';
+import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
+import 'package:drench/pages/home_page/components/drench/widgets/drench_connection_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,12 +10,14 @@ class DrenchControlMenu extends StatelessWidget {
   final DrenchController controller;
   final double controlMenuSize;
   final DrenchGame drenchGame;
+  final ConnectionParams connectionParams;
 
   DrenchControlMenu({
     this.gameOver,
     this.controller,
     this.controlMenuSize,
     this.drenchGame,
+    this.connectionParams,
   });
 
   @override
@@ -59,20 +63,7 @@ class DrenchControlMenu extends StatelessWidget {
   }
 
   buildBottomConnectionStatus() {
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-    );
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Center(
-        child: Text(
-          'Sem conexão',
-          style: textStyle,
-        ),
-      ),
-    );
+    return DrenchConnectionStatus(connectionParams: this.connectionParams);
   }
 
   Container buildBottomStatus() {

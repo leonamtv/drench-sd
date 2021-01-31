@@ -1,5 +1,6 @@
 import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class ConnectionDialogForm extends StatefulWidget {
@@ -85,8 +86,17 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
       controller: _portFieldController,
       textInputAction: TextInputAction.go,
       onSubmitted: (_) => _initConnection(),
+      onChanged: (String port) {
+        setState(() {});
+      },
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       decoration: InputDecoration(
         labelText: 'Porta',
+        errorText:
+            isValidPort() ? null : 'Porta inválida. Precisa ser maior que 1024',
       ),
     );
   }
@@ -108,7 +118,7 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
             ),
           ),
         ),
-        onPressed: _initConnection,
+        onPressed: isValidPort() ? _initConnection : null,
       ),
     );
   }
@@ -136,8 +146,18 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
       isServer: hasIsServerField() ? _isServer : null,
       ipAddress:
           hasIpAddressField() ? this._ipAddressFieldController.text : null,
-      port: this._portFieldController.text,
+      port: int.parse(this._portFieldController.text),
     );
+  }
+
+  bool isValidPort() {
+    String port = _portFieldController.text;
+
+    if (port.isEmpty) {
+      return true;
+    }
+
+    return int.parse(port) > 1024;
   }
 
   bool hasIsServerField() {

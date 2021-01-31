@@ -14,6 +14,20 @@ class Drench extends StatefulWidget {
 }
 
 class _DrenchState extends State<Drench> {
+  final double topWidgetHeight = 10;
+  final double bottomWidgetHeight = 230;
+
+  double get maxDrenchBoardHeight =>
+      MediaQuery.of(context).size.height -
+      topWidgetHeight -
+      bottomWidgetHeight -
+      56;
+
+  double get drenchBoardSize => min(
+        MediaQuery.of(context).size.width - 10,
+        maxDrenchBoardHeight,
+      );
+
   DrenchGame drenchGame;
   List<Color> colors = DrenchGame.colors;
 
@@ -24,19 +38,8 @@ class _DrenchState extends State<Drench> {
     this.setDrenchGame();
   }
 
-  Color getColor(int i) {
-    return colors[i];
-  }
-
-  double getWidgetSize() {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return min(screenWidth, screenHeight - 270);
-  }
-
   setDrenchGame() {
-    this.drenchGame = DrenchGame(maxClicks: 30, size: 14);
+    this.drenchGame = DrenchGame(maxClicks: 10, size: 5);
   }
 
   void newGame() {
@@ -63,18 +66,41 @@ class _DrenchState extends State<Drench> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Center(
+      child: Column(
+        children: <Widget>[
+          _topWidget(),
+          DrenchMatrix(
+            drenchGame: this.drenchGame,
+            widgetSize: drenchBoardSize,
+          ),
+          _bottomWidget(),
+        ],
+      ),
+    );
+  }
+
+  Widget _topWidget() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: max(topWidgetHeight, 0),
+      ),
+      child: SizedBox(
+        height: max(topWidgetHeight, 0),
+      ),
+    );
+  }
+
+  Widget _bottomWidget() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: bottomWidgetHeight,
+      ),
+      child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            DrenchMatrix(
-              drenchGame: this.drenchGame,
-              widgetSize: getWidgetSize(),
-            ),
+          children: [
             buildBottomMenu(),
             buildBottomStatus(),
-            buildBottomOption()
+            buildBottomOption(),
           ],
         ),
       ),
@@ -85,7 +111,7 @@ class _DrenchState extends State<Drench> {
     if (over == true) {
       return Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        width: getWidgetSize(),
+        width: drenchBoardSize,
         child: FlatButton(
           color: Colors.green,
           onPressed: () {
@@ -113,8 +139,7 @@ class _DrenchState extends State<Drench> {
     if (over != true) {
       return Container(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
           children: <Widget>[
             Text(
               'Restando ',
@@ -145,7 +170,7 @@ class _DrenchState extends State<Drench> {
           child: Text(
             'O jogo acabou ',
             style: TextStyle(
-                fontSize: 35, fontWeight: FontWeight.w500, color: Colors.red),
+                fontSize: 30, fontWeight: FontWeight.w500, color: Colors.red),
           ),
         ),
       );
@@ -157,11 +182,11 @@ class _DrenchState extends State<Drench> {
 
     for (int i = 0; i < 6; i++) {
       buttons.add(Container(
-        height: getWidgetSize() / 8,
-        width: getWidgetSize() / 8,
-        color: getColor(i),
+        height: drenchBoardSize / 8,
+        width: drenchBoardSize / 8,
+        color: DrenchGame.getColor(i),
         child: FlatButton(
-          color: getColor(i),
+          color: DrenchGame.getColor(i),
           onPressed: () {
             updateCanvas(i);
           },
@@ -171,7 +196,7 @@ class _DrenchState extends State<Drench> {
     }
 
     return Container(
-      width: getWidgetSize(),
+      width: drenchBoardSize,
       padding: const EdgeInsets.only(top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

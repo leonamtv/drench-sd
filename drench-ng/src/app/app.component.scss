@@ -1,0 +1,54 @@
+$size : 40px;
+
+
+.wrapper {
+    position: absolute;
+    left : 50%;
+    top : 50%;
+    transform: translate(-50%, -50%);
+}
+
+table {
+    tr {
+        td {
+            width : $size;
+            height: $size;
+            text-align: center;
+        }
+    }
+}
+
+.menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button {
+    width : $size;
+    height: $size;
+}
+
+.green {
+    background-color: green;
+}
+
+.pink {
+    background-color: pink;
+}
+
+.purple {
+    background-color: purple;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}

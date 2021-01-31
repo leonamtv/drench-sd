@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drench</title>
+</head>
+<body>
+  <div class='wrapper'>
+    <table cellspacing='0'>
+      <tr *ngFor='let data of _matrix; let i = index'>
+        <td [class]='getClass(cell)' *ngFor='let cell of data; let j = index'></td>
+      </tr>
+    </table>
+  </div>
+  <div class="menu">
+    <button (click)='updateCanvas(0)' class='green'></button>
+    <button (click)='updateCanvas(1)' class='pink'></button>
+    <button (click)='updateCanvas(2)' class='purple'></button>
+    <button (click)='updateCanvas(3)' class='blue'></button>
+    <button (click)='updateCanvas(4)' class='red'></button>
+    <button (click)='updateCanvas(5)' class='yellow'></button>
+  </div>
+</body>
+</html>

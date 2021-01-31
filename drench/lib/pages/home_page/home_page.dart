@@ -1,4 +1,4 @@
-import 'package:drench/features/socket/connection_params_model.dart';
+import 'package:drench/features/socket/connection_params.model.dart';
 import 'package:drench/features/socket/socket_connection_service.dart';
 import 'package:drench/pages/home_page/components/connection_dialog/connection_dialog_service.dart';
 import 'package:drench/pages/home_page/components/drench/drench.dart';
@@ -60,7 +60,9 @@ class _HomePageState extends State<HomePage> {
         Icons.refresh,
         color: Colors.white,
       ),
-      onPressed: this.drenchController.newGame,
+      onPressed: () {
+        this.drenchController.newGame();
+      },
     );
   }
 

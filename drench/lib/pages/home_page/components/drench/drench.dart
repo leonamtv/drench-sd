@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:drench/features/drench_game/drench_game_utils.dart';
+import 'package:drench/features/drench_game/drench_game.model.dart';
 import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
 import 'package:drench/pages/home_page/components/drench/widgets/drench_matrix.dart';
 import 'package:flutter/material.dart';
@@ -14,21 +14,14 @@ class Drench extends StatefulWidget {
 }
 
 class _DrenchState extends State<Drench> {
-  final int maxClicks = DrenchGameUtils.maxClicks;
-  final int size = DrenchGameUtils.size;
-
-  List<List<int>> _matrix;
-  List<Color> colors = DrenchGameUtils.colors;
-
-  int _counter = 0;
+  DrenchGame drenchGame;
+  List<Color> colors = DrenchGame.colors;
 
   bool over = false;
 
   _DrenchState(DrenchController _controller) {
     _controller.newGame = newGame;
-
-    _matrix = List.generate(size, (i) => List(size), growable: false);
-    this.redo();
+    this.setDrenchGame();
   }
 
   Color getColor(int i) {
@@ -42,19 +35,13 @@ class _DrenchState extends State<Drench> {
     return min(screenWidth, screenHeight - 270);
   }
 
-  void redo() {
-    var rng = new Random();
-    for (int i = 0; i < size; i++) {
-      for (int j = 0; j < size; j++) {
-        _matrix[i][j] = rng.nextInt(100) % 6;
-      }
-    }
+  setDrenchGame() {
+    this.drenchGame = DrenchGame(maxClicks: 30, size: 14);
   }
 
   void newGame() {
     setState(() {
-      this.redo();
-      _counter = 0;
+      this.setDrenchGame();
       over = false;
     });
   }
@@ -64,19 +51,13 @@ class _DrenchState extends State<Drench> {
       return;
     }
 
-    if (value == _matrix[0][0]) {
-      return;
-    }
+    this.drenchGame.paintFirstSquare(value);
 
-    _counter++;
-    DrenchGameUtils.propagateColorInMatrix(_matrix, value, _matrix[0][0]);
+    if (this.drenchGame.isGameOver()) {
+      over = true;
+    }
 
     setState(() {});
-
-    if (DrenchGameUtils.isGameOver(_counter, _matrix)) {
-      over = true;
-      return;
-    }
   }
 
   @override
@@ -88,7 +69,7 @@ class _DrenchState extends State<Drench> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             DrenchMatrix(
-              matrix: _matrix,
+              drenchGame: this.drenchGame,
               widgetSize: getWidgetSize(),
             ),
             buildBottomMenu(),
@@ -140,15 +121,18 @@ class _DrenchState extends State<Drench> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
             Text(
-              (maxClicks - _counter).toString(),
+              this.drenchGame.remainingPaints.toString(),
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w500,
-                  color:
-                      ((maxClicks - _counter) > 5) ? Colors.black : Colors.red),
+                  color: (this.drenchGame.remainingPaints > 5)
+                      ? Colors.black
+                      : Colors.red),
             ),
             Text(
-              (maxClicks - _counter) > 1 ? ' tentativas' : ' tentativa',
+              this.drenchGame.remainingPaints > 1
+                  ? ' tentativas'
+                  : ' tentativa',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             )
           ],

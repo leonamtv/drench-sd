@@ -1,0 +1,12 @@
+{
+  "name": "drench-backend",
+  "version": "1.0.0",
+  "description": "Backend do trabalho de Sistemas distribuídos",
+  "main": "index.js",
+  "repository": "https://github.com/leonamtv/drench-sd",
+  "author": "leonamtv, AndreNeves97",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^7.4.2"
+  }
+}

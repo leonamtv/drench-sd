@@ -46,6 +46,7 @@ class DrenchControlMenu extends StatelessWidget {
           color: DrenchGame.getColor(i),
           onPressed: () {
             this.controller.updateBoard(i);
+            this.controller.sendBoardUpdate(i);
           },
           child: SizedBox.shrink(),
         ),

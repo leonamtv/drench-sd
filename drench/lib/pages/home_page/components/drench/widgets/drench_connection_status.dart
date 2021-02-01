@@ -27,6 +27,8 @@ class DrenchConnectionStatus extends StatelessWidget {
     if (this.connectionParams.isServer && this.connectionParams.isTcp) {
       return _tcpServer();
     }
+
+    return _tcpClientOrUpd();
   }
 
   _withoutConnection() {
@@ -60,5 +62,24 @@ class DrenchConnectionStatus extends StatelessWidget {
       'Cliente connectado: ${this.connectionParams.remoteIpAddress}:${this.connectionParams.remotePort}',
       style: textStyle,
     );
+  }
+
+  Widget _tcpClientOrUpd() {
+    return Column(
+      children: <Widget>[
+        Text(
+          getTcpClientOrUpdText(),
+          style: textStyle,
+        ),
+      ],
+    );
+  }
+
+  String getTcpClientOrUpdText() {
+    if (connectionParams.isTcp) {
+      return 'Cliente TCP conectado ao servidor ${this.connectionParams.ipAddress}:${this.connectionParams.port}';
+    }
+
+    return 'Host UDP conectado ao host ${this.connectionParams.ipAddress}:${this.connectionParams.port}';
   }
 }

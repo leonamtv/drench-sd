@@ -34,7 +34,7 @@ class SocketConnectionService {
       return;
     }
 
-    connectWithTcpClient(connectionParams.ipAddress, connectionParams.port);
+    connectWithTcpClient(connectionParams);
   }
 
   void openTcpServer(ConnectionParams connectionParams) async {
@@ -63,7 +63,7 @@ class SocketConnectionService {
       return;
     }
 
-    ConnectionParams connectionParams = this.currentConnectionParams$.value;
+    ConnectionParams connectionParams = getConnectionParams();
 
     client.write(getInformationMessage('welcome-to-drench'));
     this.tcpRemoteClient = client;
@@ -75,11 +75,52 @@ class SocketConnectionService {
     updateConnectionParams(connectionParams);
   }
 
-  void connectWithTcpClient(String ipAddress, int port) async {
-    this.tcpClient = await Socket.connect(ipAddress, port);
+  void connectWithTcpClient(ConnectionParams connectionParams) async {
+    this.tcpClient = await Socket.connect(
+      connectionParams.ipAddress,
+      connectionParams.port,
+    );
+    this.listenDataReceiving(this.tcpClient);
+
+    updateConnectionParams(connectionParams);
   }
 
-  void sendData() {}
+  void sendData(Map<String, dynamic> data) {
+    ConnectionParams connectionParams = getConnectionParams();
+
+    if (connectionParams == null) {
+      print('There\'s no active connection');
+      return;
+    }
+
+    if (connectionParams.isTcp) {
+      this.sendWithTcp(json.encode(data));
+    }
+  }
+
+  void sendWithTcp(String data) {
+    Socket client = getActiveTcpClient();
+
+    if (client == null) {
+      print('Inactive TCP client');
+      print(getConnectionParams().toJson());
+
+      updateConnectionParams(null);
+      return;
+    }
+
+    client.write(data);
+  }
+
+  Socket getActiveTcpClient() {
+    ConnectionParams connectionParams = getConnectionParams();
+
+    if (connectionParams.isServer) {
+      return this.tcpRemoteClient;
+    }
+
+    return this.tcpClient;
+  }
 
   void listenDataReceiving(Socket client) {
     client.listen((event) {
@@ -96,6 +137,11 @@ class SocketConnectionService {
   }
 
   void updateConnectionParams(ConnectionParams connectionParams) {
+    if (connectionParams == null) {
+      this.currentConnectionParams$.add(null);
+      return;
+    }
+
     ConnectionParams newObject = ConnectionParams(
         isTcp: connectionParams.isTcp,
         isServer: connectionParams.isServer,
@@ -129,5 +175,9 @@ class SocketConnectionService {
 
   getInformationMessage(String message) {
     return json.encode({'type': 'information', 'message': message});
+  }
+
+  ConnectionParams getConnectionParams() {
+    return this.currentConnectionParams$.value;
   }
 }

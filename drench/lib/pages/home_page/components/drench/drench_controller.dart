@@ -11,12 +11,10 @@ class DrenchController {
   setSocketConnectionService(SocketConnectionService socketConnectionService) {
     this._socketConnectionService = socketConnectionService;
 
-    this
-        ._socketConnectionService
-        .currentConnectionParams$
+    socketConnectionService.currentConnectionParams$
         .listen(handleChangeConnectionParams);
 
-    this._socketConnectionService.dataReceiving$.listen(handleSocketData);
+    socketConnectionService.dataReceiving$.listen(handleSocketData);
   }
 
   handleChangeConnectionParams(ConnectionParams connectionParams) {
@@ -30,5 +28,12 @@ class DrenchController {
     if (value['type'] == 'updateBoard') {
       this.updateBoard(value['colorIndex']);
     }
+  }
+
+  sendBoardUpdate(int colorIndex) {
+    this._socketConnectionService.sendData({
+      'type': 'updateBoard',
+      'colorIndex': colorIndex,
+    });
   }
 }

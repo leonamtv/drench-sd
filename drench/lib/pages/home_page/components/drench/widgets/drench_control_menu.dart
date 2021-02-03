@@ -135,8 +135,11 @@ class DrenchControlMenu extends StatelessWidget {
         color: Colors.green,
         onPressed: () {
           this.controller.newGame();
-          this.controller.syncBoard(this.drenchGame.matrix);
-          this.controller.sendBoardSync(this.drenchGame.matrix);
+          
+          if ( this.connectionParams != null ) {
+            this.controller.syncBoard(this.drenchGame.matrix);
+            this.controller.sendBoardSync(this.drenchGame.matrix);
+          }
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),

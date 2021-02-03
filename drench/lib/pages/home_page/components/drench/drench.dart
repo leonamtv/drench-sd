@@ -55,6 +55,7 @@ class _DrenchState extends State<Drench> {
   _DrenchState({this.controller}) {
     controller.newGame = newGame;
     controller.updateBoard = updateBoard;
+    controller.syncBoard = syncBoard;
     controller.setConnectionParams = setConnectionParams;
 
     this.setDrenchGame();
@@ -83,6 +84,12 @@ class _DrenchState extends State<Drench> {
     }
 
     setState(() {});
+  }
+
+  void syncBoard ( List<List<int>> board ) {
+    setState(() {
+      this.drenchGame.matrix = board;
+    });
   }
 
   void setConnectionParams(ConnectionParams connectionParams) {

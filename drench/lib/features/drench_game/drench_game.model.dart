@@ -32,6 +32,8 @@ class DrenchGame {
   }
 
   List<List<int>> get matrix => this._matrix;
+  set matrix (List<List<int>> matrix) => this._matrix = matrix;
+  
   int get remainingPaints => this.maxClicks - this._paintsCount;
 
   bool isGameOver() {

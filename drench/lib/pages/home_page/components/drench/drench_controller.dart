@@ -4,6 +4,7 @@ import 'package:drench/features/multiplayer/socket/socket_connection_service.dar
 class DrenchController {
   void Function() newGame;
   void Function(int colorIndex) updateBoard;
+  void Function(List<List<int>> colorIndex) syncBoard;
   void Function(ConnectionParams connectionParams) setConnectionParams;
 
   SocketConnectionService _socketConnectionService;
@@ -27,7 +28,17 @@ class DrenchController {
 
     if (value['type'] == 'updateBoard') {
       this.updateBoard(value['colorIndex']);
+    } else if (value['type'] == 'syncBoard') {
+      if ( this._socketConnectionService.getConnectionParams().isServer )
+        this.syncBoard(value['board']);
     }
+  }
+
+  sendBoardSync(List<List<int>> board) {
+    this._socketConnectionService.sendData({
+      'type' : 'syncBoard',
+      'board' : board
+    });
   }
 
   sendBoardUpdate(int colorIndex) {

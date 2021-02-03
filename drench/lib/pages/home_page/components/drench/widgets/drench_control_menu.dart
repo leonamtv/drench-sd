@@ -137,6 +137,7 @@ class DrenchControlMenu extends StatelessWidget {
           this.controller.newGame();
           if ( this.connectionParams != null ) {
             this.controller.syncBoard(this.drenchGame.matrix);
+            this.controller.sendBoardSync(this.drenchGame.matrix);
           }
         },
         child: Padding(

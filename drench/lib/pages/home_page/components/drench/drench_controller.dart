@@ -29,8 +29,22 @@ class DrenchController {
     if (value['type'] == 'updateBoard') {
       this.updateBoard(value['colorIndex']);
     } else if (value['type'] == 'syncBoard') {
-      if ( this._socketConnectionService.getConnectionParams().isServer )
-        this.syncBoard(value['board']);
+      if (this._socketConnectionService.getConnectionParams().isServer)
+        return;
+
+      List<List<int>> board = new List<List<int>>();
+
+      value['board'].forEach((vector) {
+        List<int> list = new List<int>();
+
+        vector.forEach((value) {
+          list.add(value as int);
+        });
+
+        board.add(list);
+      });
+
+      this.syncBoard(board);
     }
   }
 

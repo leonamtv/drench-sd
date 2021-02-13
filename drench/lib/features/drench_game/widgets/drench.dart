@@ -70,6 +70,10 @@ class _DrenchState extends State<Drench> {
       this.setDrenchGame();
       gameOver = false;
     });
+
+    if (this.connectionParams != null) {
+      this.controller.sendBoardSync(this.drenchGame.matrix);
+    }
   }
 
   void updateBoard(int value) {
@@ -86,7 +90,7 @@ class _DrenchState extends State<Drench> {
     setState(() {});
   }
 
-  void syncBoard ( List<List<int>> board ) {
+  void syncBoard(List<List<int>> board) {
     setState(() {
       this.drenchGame.matrix = board;
     });

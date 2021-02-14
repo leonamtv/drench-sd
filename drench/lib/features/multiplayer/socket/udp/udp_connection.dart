@@ -24,12 +24,22 @@ class UdpConnection {
   }
 
   void listenDataReceiving() {
+    print('listen');
+    print(this.udpServer);
+
+    print(
+        {'addr': this.udpServer.address.address, 'port': this.udpServer.port});
+
     this.udpServer.listen((RawSocketEvent event) {
       Datagram datagram = this.udpServer.receive();
 
       if (datagram == null) {
         return;
       }
+
+      print(
+        '---- Message from ${datagram.address.address}:${datagram.port}',
+      );
 
       String message = new String.fromCharCodes(datagram.data).trim();
 
@@ -44,6 +54,8 @@ class UdpConnection {
     List<InternetAddress> addresses = await InternetAddress.lookup(
         connectionParams.ipAddress,
         type: InternetAddressType.IPv4);
+
+    print(addresses);
 
     this.udpServer.send(data.codeUnits, addresses[0], connectionParams.port);
   }

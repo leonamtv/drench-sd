@@ -79,9 +79,17 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
       autofocus: true,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        labelText: 'Endereço Ip',
+        labelText: getIpAddressFieldLabel(),
       ),
     );
+  }
+
+  getIpAddressFieldLabel() {
+    if (!_isTcp || !_isServer) {
+      return 'Endereço Ip remoto';
+    }
+
+    return 'Endereço Ip';
   }
 
   Widget _portField() {

@@ -80,6 +80,6 @@ class DrenchConnectionStatus extends StatelessWidget {
       return 'Cliente TCP conectado ao servidor ${this.connectionParams.ipAddress}:${this.connectionParams.port}';
     }
 
-    return 'Host UDP aberto em ${this.connectionParams.ipAddress}:${this.connectionParams.port}';
+    return 'Host UDP aberto na porta ${this.connectionParams.port}';
   }
 }

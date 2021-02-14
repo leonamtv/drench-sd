@@ -65,14 +65,14 @@ class _DrenchState extends State<Drench> {
     this.drenchGame = DrenchGame(maxClicks: 10, size: 5);
   }
 
-  void newGame() {
+  void newGame(bool syncBoard) {
     setState(() {
       this.setDrenchGame();
       gameOver = false;
     });
 
-    if (this.connectionParams != null) {
-      this.controller.sendBoardSync(this.drenchGame.matrix);
+    if (syncBoard && this.connectionParams != null) {
+      this.controller.sendBoardSync(this.drenchGame.matrix, true);
     }
   }
 

@@ -134,7 +134,7 @@ class DrenchControlMenu extends StatelessWidget {
       child: FlatButton(
         color: Colors.green,
         onPressed: () {
-          this.controller.newGame();
+          this.controller.newGame(true);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),

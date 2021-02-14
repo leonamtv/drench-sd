@@ -68,8 +68,10 @@ class SocketConnectionService {
   void broadcastMessageReceived(dynamic data) {
     try {
       dataReceiving$.add(json.decode(data));
-      dataReceiving$.add(json.decode(data));
-    } catch (e) {}
+    } catch (e) {
+      print('decode error:');
+      print(e);
+    }
   }
 
   void closeActiveConnections() {

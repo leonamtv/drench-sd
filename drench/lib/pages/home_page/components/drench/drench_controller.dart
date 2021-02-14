@@ -2,7 +2,7 @@ import 'package:drench/features/multiplayer/socket/connection_params.model.dart'
 import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
 
 class DrenchController {
-  void Function() newGame;
+  void Function(bool newGame) newGame;
   void Function(int colorIndex) updateBoard;
   void Function(List<List<int>> colorIndex) syncBoard;
   void Function(ConnectionParams connectionParams) setConnectionParams;
@@ -44,15 +44,19 @@ class DrenchController {
         board.add(list);
       });
 
+      if (value['reset'] == true) {
+        this.newGame(false);
+      }
+
       this.syncBoard(board);
       return;
     }
   }
 
-  sendBoardSync(List<List<int>> board) {
+  sendBoardSync(List<List<int>> board, bool reset) {
     this
         ._socketConnectionService
-        .sendData({'type': 'syncBoard', 'board': board});
+        .sendData({'type': 'syncBoard', 'board': board, 'reset': reset});
   }
 
   sendBoardUpdate(int colorIndex) {

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 import 'package:drench/features/multiplayer/socket/tcp/tcp_connection.dart';
-import 'package:drench/features/multiplayer/socket/tcp/udp_connection.dart';
+import 'package:drench/features/multiplayer/socket/udp/udp_connection.dart';
 import 'package:rxdart/subjects.dart';
 
 class SocketConnectionService {

@@ -15,10 +15,12 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   bool _isServer = false;
   TextEditingController _ipAddressFieldController;
   TextEditingController _portFieldController;
+  TextEditingController _remotePortFieldController;
 
   _ConnectionDialogFormState() {
     this._ipAddressFieldController = TextEditingController(text: '127.0.0.1');
-    this._portFieldController = TextEditingController();
+    this._portFieldController = TextEditingController(text: '2121');
+    this._remotePortFieldController = TextEditingController(text: '2122');
   }
 
   @override
@@ -39,6 +41,7 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
       SizedBox(height: 20),
       hasIpAddressField() ? _ipAddressField() : null,
       _portField(),
+      hasRemotePortField() ? _remotePortField() : null,
       SizedBox(height: 40),
       _submitButton()
     ];
@@ -84,8 +87,9 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   Widget _portField() {
     return TextField(
       controller: _portFieldController,
-      textInputAction: TextInputAction.go,
-      onSubmitted: (_) => _initConnection(),
+      textInputAction:
+          hasRemotePortField() ? TextInputAction.next : TextInputAction.go,
+      onSubmitted: (_) => hasRemotePortField() ? null : _initConnection(),
       onChanged: (String port) {
         setState(() {});
       },
@@ -97,6 +101,27 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
         labelText: 'Porta',
         errorText:
             isValidPort() ? null : 'Porta inválida. Precisa ser maior que 1024',
+      ),
+    );
+  }
+
+  Widget _remotePortField() {
+    return TextField(
+      controller: _remotePortFieldController,
+      textInputAction: TextInputAction.go,
+      onSubmitted: (_) => _initConnection(),
+      onChanged: (String port) {
+        setState(() {});
+      },
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      decoration: InputDecoration(
+        labelText: 'Porta remota',
+        errorText: isValidRemotePort()
+            ? null
+            : 'Porta inválida. Precisa ser maior que 1024',
       ),
     );
   }
@@ -118,7 +143,10 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
             ),
           ),
         ),
-        onPressed: isValidPort() ? _initConnection : null,
+        onPressed:
+            isValidPort() && (hasRemotePortField() ? isValidRemotePort() : true)
+                ? _initConnection
+                : null,
       ),
     );
   }
@@ -147,21 +175,36 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
       ipAddress:
           hasIpAddressField() ? this._ipAddressFieldController.text : null,
       port: int.parse(this._portFieldController.text),
+      remotePort: int.parse(this._remotePortFieldController.text),
     );
   }
 
   bool isValidPort() {
     String port = _portFieldController.text;
 
-    if (port.isEmpty) {
-      return true;
+    if (port.isNotEmpty && int.parse(port) <= 1024) {
+      return false;
     }
 
-    return int.parse(port) > 1024;
+    return true;
+  }
+
+  bool isValidRemotePort() {
+    String remotePort = _remotePortFieldController.text;
+
+    if (remotePort.isNotEmpty && int.parse(remotePort) <= 1024) {
+      return false;
+    }
+
+    return true;
   }
 
   bool hasIsServerField() {
     return _isTcp;
+  }
+
+  bool hasRemotePortField() {
+    return !_isTcp;
   }
 
   bool hasIpAddressField() {

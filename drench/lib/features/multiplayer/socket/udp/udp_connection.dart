@@ -57,7 +57,9 @@ class UdpConnection {
 
     print(addresses);
 
-    this.udpServer.send(data.codeUnits, addresses[0], connectionParams.port);
+    this
+        .udpServer
+        .send(data.codeUnits, addresses[0], connectionParams.remotePort);
   }
 
   void closeActiveConnections() {

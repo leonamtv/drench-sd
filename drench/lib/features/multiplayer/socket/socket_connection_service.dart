@@ -76,7 +76,7 @@ class SocketConnectionService {
 
   void closeActiveConnections() {
     this._tcp.closeActiveConnections();
-    this._tcp.closeActiveConnections();
+    this._udp.closeActiveConnections();
   }
 
   getInformationMessage(String message) {

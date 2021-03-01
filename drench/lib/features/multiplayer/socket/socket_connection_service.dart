@@ -21,8 +21,6 @@ class SocketConnectionService {
   }
 
   void connect(ConnectionParams connectionParams) {
-    closeActiveConnections();
-
     if (connectionParams.isTcp) {
       this._tcp.openConnection(connectionParams);
       return;

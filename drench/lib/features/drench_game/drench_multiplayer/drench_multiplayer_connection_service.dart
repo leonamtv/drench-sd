@@ -1,8 +1,9 @@
 import 'package:drench/features/multiplayer/connection_params.model.dart';
+import 'package:drench/features/multiplayer/grpc/grpc_connection_service.dart';
 import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
 import 'package:rxdart/subjects.dart';
 
-class MultiplayerConnectionService {
+class DrenchMultiplayerConnectionService {
   BehaviorSubject<ConnectionParams> currentConnectionParams$ =
       BehaviorSubject<ConnectionParams>();
 
@@ -12,9 +13,11 @@ class MultiplayerConnectionService {
       ReplaySubject<Map<String, dynamic>>();
 
   SocketConnectionService _socketConnectionService;
+  GRPCConnectionService _gRPCConnectionService;
 
-  MultiplayerConnectionService() {
+  DrenchMultiplayerConnectionService() {
     this.createSocketService();
+    this.createGRPCService();
   }
 
   createSocketService() {
@@ -27,11 +30,25 @@ class MultiplayerConnectionService {
     socketService.dataReceiving$.listen(handleSocketData);
   }
 
+  createGRPCService() {
+    final gRPCService = GRPCConnectionService();
+    this._gRPCConnectionService = gRPCService;
+  }
+
   void connect(ConnectionParams connectionParams) {
+    closeActiveConnections();
+
     if (connectionParams.isSocket) {
       this._socketConnectionService.connect(connectionParams);
       return;
     }
+
+    this._gRPCConnectionService.connect(connectionParams);
+  }
+
+  closeActiveConnections() {
+    this._socketConnectionService.closeActiveConnections();
+    this._gRPCConnectionService.closeActiveConnections();
   }
 
   void handleSocketData(value) {

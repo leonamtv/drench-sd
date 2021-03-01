@@ -1,5 +1,5 @@
+import 'package:drench/features/drench_game/drench_multiplayer/drench_multiplayer_connection_service.dart';
 import 'package:drench/features/multiplayer/connection_params.model.dart';
-import 'package:drench/features/multiplayer/multiplayer_connection_service.dart';
 
 class DrenchController {
   void Function(bool newGame) newGame;
@@ -7,17 +7,17 @@ class DrenchController {
   void Function(List<List<int>> colorIndex) syncBoard;
   void Function(ConnectionParams connectionParams) setConnectionParams;
 
-  MultiplayerConnectionService _multiplayerConnectionService;
+  DrenchMultiplayerConnectionService _drenchMultiplayerConnectionService;
 
   setMultiplayerConnectionService(
-      MultiplayerConnectionService multiplayerConnectionService) {
-    this._multiplayerConnectionService = multiplayerConnectionService;
+      DrenchMultiplayerConnectionService multiplayerConnectionService) {
+    this._drenchMultiplayerConnectionService = multiplayerConnectionService;
 
-    _multiplayerConnectionService.currentConnectionParams$
+    _drenchMultiplayerConnectionService.currentConnectionParams$
         .listen(handleChangeConnectionParams);
 
-    _multiplayerConnectionService.updateBoard$.listen(handleUpdateBoard);
-    _multiplayerConnectionService.syncBoard$.listen(handleSyncBoard);
+    _drenchMultiplayerConnectionService.updateBoard$.listen(handleUpdateBoard);
+    _drenchMultiplayerConnectionService.syncBoard$.listen(handleSyncBoard);
   }
 
   handleChangeConnectionParams(ConnectionParams connectionParams) {
@@ -49,10 +49,10 @@ class DrenchController {
   }
 
   sendBoardSync(List<List<int>> board, bool reset) {
-    this._multiplayerConnectionService.sendBoardSync(board, reset);
+    this._drenchMultiplayerConnectionService.sendBoardSync(board, reset);
   }
 
   sendBoardUpdate(int colorIndex) {
-    this._multiplayerConnectionService.sendBoardUpdate(colorIndex);
+    this._drenchMultiplayerConnectionService.sendBoardUpdate(colorIndex);
   }
 }

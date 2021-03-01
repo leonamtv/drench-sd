@@ -1,6 +1,6 @@
+import 'package:drench/features/drench_game/drench_multiplayer/drench_multiplayer_connection_service.dart';
 import 'package:drench/features/multiplayer/components/connection_dialog/connection_dialog_service.dart';
 import 'package:drench/features/multiplayer/connection_params.model.dart';
-import 'package:drench/features/multiplayer/multiplayer_connection_service.dart';
 import 'package:drench/features/drench_game/drench_component.dart';
 import 'package:drench/features/drench_game/drench_controller.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +15,15 @@ class _HomePageState extends State<HomePage> {
   final ConnectionDialogService _connectionDialogService =
       ConnectionDialogService();
 
-  final MultiplayerConnectionService _multiplayerConnectionService =
-      MultiplayerConnectionService();
+  final DrenchMultiplayerConnectionService _drenchMultiplayerConnectionService =
+      DrenchMultiplayerConnectionService();
 
   final DrenchController drenchController = DrenchController();
 
   _HomePageState() {
     this
         .drenchController
-        .setMultiplayerConnectionService(_multiplayerConnectionService);
+        .setMultiplayerConnectionService(_drenchMultiplayerConnectionService);
   }
 
   @override
@@ -84,6 +84,6 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    this._multiplayerConnectionService.connect(connectionParams);
+    this._drenchMultiplayerConnectionService.connect(connectionParams);
   }
 }

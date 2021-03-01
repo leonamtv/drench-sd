@@ -11,7 +11,7 @@ class ConnectionDialogForm extends StatefulWidget {
 }
 
 class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
-  bool _isSocket = true;
+  bool _isSocket = false;
   bool _isTcp = true;
   bool _isServer = false;
   TextEditingController _ipAddressFieldController;
@@ -174,6 +174,14 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
   }
 
   String _submitButtonText() {
+    if (!_isSocket) {
+      if (this._isServer) {
+        return 'Iniciar servidor gRPC';
+      }
+
+      return 'Estabelecer conexão gRPC';
+    }
+
     if (!this._isTcp) {
       return 'Abrir porta UDP';
     }

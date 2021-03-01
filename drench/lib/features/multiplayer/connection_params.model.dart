@@ -1,4 +1,5 @@
 class ConnectionParams {
+  bool isSocket;
   bool isTcp;
   bool isServer;
   String ipAddress;
@@ -7,7 +8,8 @@ class ConnectionParams {
   int remotePort;
 
   ConnectionParams(
-      {this.isTcp,
+      {this.isSocket,
+      this.isTcp,
       this.isServer,
       this.ipAddress,
       this.port,
@@ -15,6 +17,7 @@ class ConnectionParams {
       this.remotePort});
 
   Map<String, dynamic> toJson() => {
+        'isSocket': isSocket,
         'isTcp': isTcp,
         'isServer': isServer,
         'ipAddress': ipAddress,

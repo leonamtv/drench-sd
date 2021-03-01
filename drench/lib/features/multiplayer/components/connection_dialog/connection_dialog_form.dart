@@ -11,6 +11,7 @@ class ConnectionDialogForm extends StatefulWidget {
 }
 
 class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
+  bool _isSocket = true;
   bool _isTcp = true;
   bool _isServer = false;
   TextEditingController _ipAddressFieldController;
@@ -36,7 +37,8 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
 
   List<Widget> _getFields() {
     List<Widget> list = [
-      _isTcpField(),
+      _isSocketField(),
+      hasIsTcpField() ? _isTcpField() : null,
       hasIsServerField() ? _isServerField() : null,
       SizedBox(height: 20),
       hasIpAddressField() ? _ipAddressField() : null,
@@ -47,6 +49,18 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
     ];
 
     return list.where((field) => field != null).toList();
+  }
+
+  Widget _isSocketField() {
+    return SwitchListTile(
+      title: const Text('Usar Socket'),
+      value: _isSocket,
+      onChanged: (bool value) {
+        setState(() {
+          _isSocket = value;
+        });
+      },
+    );
   }
 
   Widget _isServerField() {
@@ -178,6 +192,7 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
 
   ConnectionParams getValues() {
     return ConnectionParams(
+      isSocket: _isSocket,
       isTcp: _isTcp,
       isServer: hasIsServerField() ? _isServer : null,
       ipAddress:
@@ -207,15 +222,23 @@ class _ConnectionDialogFormState extends State<ConnectionDialogForm> {
     return true;
   }
 
+  bool hasIsTcpField() {
+    return _isSocket;
+  }
+
   bool hasIsServerField() {
-    return _isTcp;
+    return !_isSocket || _isTcp;
   }
 
   bool hasRemotePortField() {
-    return !_isTcp;
+    return _isSocket && !_isTcp;
   }
 
   bool hasIpAddressField() {
+    if (!_isSocket) {
+      return !_isServer;
+    }
+
     return !_isTcp || _isTcp && !_isServer;
   }
 }

@@ -6,9 +6,9 @@ class MultiplayerConnectionService {
   BehaviorSubject<ConnectionParams> currentConnectionParams$ =
       BehaviorSubject<ConnectionParams>();
 
-  ReplaySubject<int> updateBoardRequest$ = ReplaySubject<int>();
+  ReplaySubject<int> updateBoard$ = ReplaySubject<int>();
 
-  ReplaySubject<Map<String, dynamic>> syncBoardRequest$ =
+  ReplaySubject<Map<String, dynamic>> syncBoard$ =
       ReplaySubject<Map<String, dynamic>>();
 
   SocketConnectionService _socketConnectionService;
@@ -19,7 +19,6 @@ class MultiplayerConnectionService {
 
   createSocketService() {
     final socketService = SocketConnectionService();
-
     this._socketConnectionService = socketService;
 
     socketService.currentConnectionParams$
@@ -29,19 +28,30 @@ class MultiplayerConnectionService {
   }
 
   void connect(ConnectionParams connectionParams) {
-    this._socketConnectionService.connect(connectionParams);
+    if (connectionParams.isSocket) {
+      this._socketConnectionService.connect(connectionParams);
+      return;
+    }
   }
 
   void handleSocketData(value) {
     if (value['type'] == 'updateBoard') {
-      this.updateBoardRequest$.add(value['colorIndex']);
+      updateBoard(value['colorIndex']);
       return;
     }
 
     if (value['type'] == 'syncBoard') {
-      this.syncBoardRequest$.add(value);
+      syncBoard(value);
       return;
     }
+  }
+
+  updateBoard(int colorIndex) {
+    this.updateBoard$.add(colorIndex);
+  }
+
+  syncBoard(value) {
+    this.syncBoard$.add(value);
   }
 
   sendBoardSync(List<List<int>> board, bool reset) {

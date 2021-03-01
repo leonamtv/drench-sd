@@ -16,22 +16,19 @@ class DrenchController {
     _multiplayerConnectionService.currentConnectionParams$
         .listen(handleChangeConnectionParams);
 
-    _multiplayerConnectionService.updateBoardRequest$
-        .listen(handleUpdateBoardRequest);
-
-    _multiplayerConnectionService.syncBoardRequest$
-        .listen(handleSyncBoardRequest);
+    _multiplayerConnectionService.updateBoard$.listen(handleUpdateBoard);
+    _multiplayerConnectionService.syncBoard$.listen(handleSyncBoard);
   }
 
   handleChangeConnectionParams(ConnectionParams connectionParams) {
     this.setConnectionParams(connectionParams);
   }
 
-  handleUpdateBoardRequest(int colorIndex) {
+  handleUpdateBoard(int colorIndex) {
     this.updateBoard(colorIndex);
   }
 
-  handleSyncBoardRequest(Map<String, dynamic> args) {
+  handleSyncBoard(Map<String, dynamic> args) {
     List<List<int>> board = new List<List<int>>();
 
     args['board'].forEach((vector) {

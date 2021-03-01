@@ -43,7 +43,8 @@ class DrenchMultiplayerConnectionService {
       return;
     }
 
-    this._gRPCConnectionService.connect(connectionParams);
+    this.currentConnectionParams$.add(connectionParams);
+    this._gRPCConnectionService.connect(connectionParams, this);
   }
 
   closeActiveConnections() {
@@ -72,12 +73,26 @@ class DrenchMultiplayerConnectionService {
   }
 
   sendBoardSync(List<List<int>> board, bool reset) {
+    final connectionParams = this.currentConnectionParams$.value;
+
+    if (!connectionParams.isSocket) {
+      this._gRPCConnectionService.sendBoardSync(board, reset);
+      return;
+    }
+
     this
         ._socketConnectionService
         .sendData({'type': 'syncBoard', 'board': board, 'reset': reset});
   }
 
   sendBoardUpdate(int colorIndex) {
+    final connectionParams = this.currentConnectionParams$.value;
+
+    if (!connectionParams.isSocket) {
+      this._gRPCConnectionService.sendBoardUpdate(colorIndex);
+      return;
+    }
+
     this._socketConnectionService.sendData({
       'type': 'updateBoard',
       'colorIndex': colorIndex,

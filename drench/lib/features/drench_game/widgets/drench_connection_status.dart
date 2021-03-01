@@ -24,6 +24,10 @@ class DrenchConnectionStatus extends StatelessWidget {
       return _withoutConnection();
     }
 
+    if (!this.connectionParams.isSocket) {
+      return _grpc();
+    }
+
     if (this.connectionParams.isTcp && this.connectionParams.isServer) {
       return _tcpServer();
     }
@@ -81,5 +85,24 @@ class DrenchConnectionStatus extends StatelessWidget {
     }
 
     return 'Host UDP aberto na porta ${this.connectionParams.port}';
+  }
+
+  Widget _grpc() {
+    return Column(
+      children: <Widget>[
+        Text(
+          getGRPCText(),
+          style: textStyle,
+        ),
+      ],
+    );
+  }
+
+  String getGRPCText() {
+    if (this.connectionParams.isServer) {
+      return 'Servidor gRPC aberto na porta ${this.connectionParams.port}';
+    }
+
+    return 'Cliente gRPC connectado ao servidor ${this.connectionParams.ipAddress}:${this.connectionParams.port}';
   }
 }

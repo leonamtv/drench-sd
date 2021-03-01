@@ -1,5 +1,5 @@
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
-import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
+import 'package:drench/features/multiplayer/multiplayer_connection_service.dart';
 
 class DrenchController {
   void Function(bool newGame) newGame;
@@ -7,62 +7,55 @@ class DrenchController {
   void Function(List<List<int>> colorIndex) syncBoard;
   void Function(ConnectionParams connectionParams) setConnectionParams;
 
-  SocketConnectionService _socketConnectionService;
+  MultiplayerConnectionService _multiplayerConnectionService;
 
-  setSocketConnectionService(SocketConnectionService socketConnectionService) {
-    this._socketConnectionService = socketConnectionService;
+  setMultiplayerConnectionService(
+      MultiplayerConnectionService multiplayerConnectionService) {
+    this._multiplayerConnectionService = multiplayerConnectionService;
 
-    socketConnectionService.currentConnectionParams$
+    _multiplayerConnectionService.currentConnectionParams$
         .listen(handleChangeConnectionParams);
 
-    socketConnectionService.dataReceiving$.listen(handleSocketData);
+    _multiplayerConnectionService.updateBoardRequest$
+        .listen(handleUpdateBoardRequest);
+
+    _multiplayerConnectionService.syncBoardRequest$
+        .listen(handleSyncBoardRequest);
   }
 
   handleChangeConnectionParams(ConnectionParams connectionParams) {
     this.setConnectionParams(connectionParams);
   }
 
-  void handleSocketData(value) {
-    print('===== data received');
-    print(value);
+  handleUpdateBoardRequest(int colorIndex) {
+    this.updateBoard(colorIndex);
+  }
 
-    if (value['type'] == 'updateBoard') {
-      this.updateBoard(value['colorIndex']);
-      return;
-    }
+  handleSyncBoardRequest(Map<String, dynamic> args) {
+    List<List<int>> board = new List<List<int>>();
 
-    if (value['type'] == 'syncBoard') {
-      List<List<int>> board = new List<List<int>>();
+    args['board'].forEach((vector) {
+      List<int> list = new List<int>();
 
-      value['board'].forEach((vector) {
-        List<int> list = new List<int>();
-
-        vector.forEach((value) {
-          list.add(value as int);
-        });
-
-        board.add(list);
+      vector.forEach((value) {
+        list.add(value as int);
       });
 
-      if (value['reset'] == true) {
-        this.newGame(false);
-      }
+      board.add(list);
+    });
 
-      this.syncBoard(board);
-      return;
+    if (args['reset'] == true) {
+      this.newGame(false);
     }
+
+    this.syncBoard(board);
   }
 
   sendBoardSync(List<List<int>> board, bool reset) {
-    this
-        ._socketConnectionService
-        .sendData({'type': 'syncBoard', 'board': board, 'reset': reset});
+    this._multiplayerConnectionService.sendBoardSync(board, reset);
   }
 
   sendBoardUpdate(int colorIndex) {
-    this._socketConnectionService.sendData({
-      'type': 'updateBoard',
-      'colorIndex': colorIndex,
-    });
+    this._multiplayerConnectionService.sendBoardUpdate(colorIndex);
   }
 }

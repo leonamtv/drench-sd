@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
 import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
 
 class TcpConnection {

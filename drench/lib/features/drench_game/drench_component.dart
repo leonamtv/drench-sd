@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:drench/features/drench_game/drench_game.model.dart';
 import 'package:drench/features/drench_game/widgets/drench_control_menu.dart';
 import 'package:drench/features/drench_game/widgets/drench_matrix.dart';
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
 import 'package:drench/features/drench_game/drench_controller.dart';
 import 'package:flutter/material.dart';
 

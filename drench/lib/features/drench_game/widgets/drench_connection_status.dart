@@ -1,4 +1,4 @@
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
 import 'package:flutter/widgets.dart';
 
 class DrenchConnectionStatus extends StatelessWidget {

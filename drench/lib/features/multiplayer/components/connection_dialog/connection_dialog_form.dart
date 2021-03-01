@@ -1,4 +1,4 @@
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';

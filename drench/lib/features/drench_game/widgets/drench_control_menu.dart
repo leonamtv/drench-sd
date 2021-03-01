@@ -1,6 +1,6 @@
 import 'package:drench/features/drench_game/drench_game.model.dart';
 import 'package:drench/features/drench_game/widgets/drench_connection_status.dart';
-import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
+import 'package:drench/features/multiplayer/connection_params.model.dart';
 import 'package:drench/features/drench_game/drench_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

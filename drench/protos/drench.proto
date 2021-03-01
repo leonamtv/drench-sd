@@ -1,0 +1,24 @@
+// Commando to generate files:
+// protoc -I protos/ protos/drench.proto --dart_out=grpc:lib/generated
+
+syntax = "proto3";
+package drenchPackage;
+
+service Drench {
+    rpc syncBoard(SyncBoardData) returns (voidNoParam);
+    rpc updateBoard(UpdateBoardData) returns (voidNoParam);
+
+    rpc subscribeSyncBoard(voidNoParam) returns (stream SyncBoardData);
+    rpc subscribeUpdateBoard(voidNoParam) returns (stream UpdateBoardData);
+}
+
+message voidNoParam {}
+
+message SyncBoardData {
+    string board = 1;
+    bool reset = 2;
+}
+
+message UpdateBoardData {
+    int32 colorIndex = 1;
+}

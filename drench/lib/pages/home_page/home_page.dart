@@ -1,8 +1,8 @@
 import 'package:drench/features/multiplayer/components/connection_dialog/connection_dialog_service.dart';
 import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
 import 'package:drench/features/multiplayer/socket/socket_connection_service.dart';
-import 'package:drench/features/drench_game/widgets/drench.dart';
-import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
+import 'package:drench/features/drench_game/drench_component.dart';
+import 'package:drench/features/drench_game/drench_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body() {
-    return Drench(controller: drenchController);
+    return DrenchComponent(controller: drenchController);
   }
 
   void showConnectionDialog() async {

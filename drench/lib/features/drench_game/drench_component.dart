@@ -3,19 +3,20 @@ import 'package:drench/features/drench_game/drench_game.model.dart';
 import 'package:drench/features/drench_game/widgets/drench_control_menu.dart';
 import 'package:drench/features/drench_game/widgets/drench_matrix.dart';
 import 'package:drench/features/multiplayer/socket/connection_params.model.dart';
-import 'package:drench/pages/home_page/components/drench/drench_controller.dart';
+import 'package:drench/features/drench_game/drench_controller.dart';
 import 'package:flutter/material.dart';
 
-class Drench extends StatefulWidget {
+class DrenchComponent extends StatefulWidget {
   final DrenchController controller;
 
-  Drench({Key key, this.controller});
+  DrenchComponent({Key key, this.controller});
 
   @override
-  _DrenchState createState() => _DrenchState(controller: controller);
+  _DrenchComponentState createState() =>
+      _DrenchComponentState(controller: controller);
 }
 
-class _DrenchState extends State<Drench> {
+class _DrenchComponentState extends State<DrenchComponent> {
   final DrenchController controller;
 
   final double topWidgetHeight = 10;
@@ -52,7 +53,7 @@ class _DrenchState extends State<Drench> {
 
   bool gameOver = false;
 
-  _DrenchState({this.controller}) {
+  _DrenchComponentState({this.controller}) {
     controller.newGame = newGame;
     controller.updateBoard = updateBoard;
     controller.syncBoard = syncBoard;

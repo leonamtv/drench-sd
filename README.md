@@ -22,3 +22,14 @@ Referências utilizadas:
 - gRPC: https://grpc.io/
 - gRPC Dart: https://grpc.io/docs/languages/dart/
 - protocolBuffers: https://developers.google.com/protocol-buffers
+
+
+## Demonstração
+
+Vídeo com demosntração do jogo em funcionamento multiplayer: https://www.youtube.com/watch?v=d5h8v_d_-H8
+
+## Autores
+
+[Leonam Teixeira de Vasconcelos](https://github.com/leonamtv)
+
+[André Marcelino de Souza Neves](https://github.com/AndreNeves97)

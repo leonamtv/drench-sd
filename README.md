@@ -26,24 +26,25 @@ Referências utilizadas:
 
 ## Demonstração
 
-Vídeo com demosntração do jogo em funcionamento multiplayer: https://www.youtube.com/watch?v=d5h8v_d_-H8
+### Imagens
 
-<object width="425" height="350">
-  <param name="movie" value="https://www.youtube.com/embed/d5h8v_d_-H8" />
-  <param name="wmode" value="transparent" />
-  <embed src="https://www.youtube.com/embed/d5h8v_d_-H8"
-         type="application/x-shockwave-flash"
-         wmode="transparent" width="425" height="350" />
-</object>
+<table>
+    <td>
+        <img src="./imgs/drench/fig1.png" alt="Drench game - Figure 1" />
+    </td>
+    <td>
+        <img src="./imgs/drench/fig2.png" alt="Drench game - Figure 2" />
+    </td>
+</table>
 
-
-
-![Drench game - Figure 1](./imgs/drench/fig1.png)
-
-![Drench game - Figure 2](./imgs/drench/fig2.png)
 
 ![Drench game - Figure 3](./imgs/drench/fig3.jpg)
 
+### Video
+
+Vídeo com demonstração do jogo em funcionamento multiplayer: https://www.youtube.com/watch?v=d5h8v_d_-H8
+
+[![Drench video](https://img.youtube.com/vi/d5h8v_d_-H8/hqdefault.jpg)](https://www.youtube.com/watch?v=d5h8v_d_-H8)
 
 ## Autores
 
